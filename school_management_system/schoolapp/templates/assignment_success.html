@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="container text-center py-5">
+  <h2>✅ Assignment Submitted Successfully!</h2>
+  <p>Your assignment has been uploaded.</p>
+
+  <form action="{% url 'stu_course' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="stu_course_id" value="{{ stu_id }}">
+    <button type="submit" class="btn btn-primary mt-4">Go to My Classroom</button>
+  </form>
+</div>
+
+{% endblock %}

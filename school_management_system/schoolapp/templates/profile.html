@@ -1,0 +1,215 @@
+{%  extends 'base.html' %}
+
+{%block title%}Profile Settings{% endblock %}
+
+{%block body%}
+
+{% if messages %}
+{% for message in messages %}
+
+
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong> {{message}}</strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+
+{% endfor %}
+{% endif %}
+
+{% if request.session.Teacher_id %}
+<style>
+	.profile-pic{
+		max-width: 200px;
+		max-height:200px;
+		margin: 0 auto;
+		border-radius: 50%;
+	}
+</style>
+
+<br>
+
+{% for jk in add_email_user_email %}
+					  {{jk}}
+					  {% endfor %}
+
+<div class="row ml-5 pt-5 pl-5">
+	<div class="col-md-3">
+		<div class="card card-body">
+			<a class="btn btn-warning" href="{% url 'index' %}"> &#8592; Back to Home</a>
+			<hr>
+			<h3 style="text-align: center">Profile</h3>
+			<hr>
+            {% if request.session.Stu_id %}
+				{% if student.profile_pic %}
+					<img src="{{ student.profile_pic.url }}" class="profile-pic" alt="Student Image">
+				{% else %}
+					<img src="/static/default_student.png" class="profile-pic" alt="Default Student">
+				{% endif %}
+			{% elif request.session.Teacher_id %}
+				{% if teacher.profile_pic %}
+					<img src="{{ teacher.profile_pic.url }}" class="profile-pic" alt="Teacher Image">
+				{% else %}
+					<img src="/static/default_teacher.png" class="profile-pic" alt="Default Teacher">
+				{% endif %}
+			{% endif %}
+			<hr>
+			<form method="POST" enctype="multipart/form-data" action="{% url 'upload_profile_pic' %}">
+				{% csrf_token %}
+				<input type="file" name="profile_pic" accept="image/*" class="form-control-file">
+				
+				{% if request.session.Stu_id %}
+					{% if student.profile_pic.name != "student_profiles/default_stu.png" %}
+						<button type="submit" class="btn btn-primary btn-sm mt-2">Update Profile Picture</button>
+					{% else %}
+						<button type="submit" class="btn btn-success btn-sm mt-2">Upload Profile Picture</button>
+					{% endif %}
+				{% elif request.session.Teacher_id %}
+					{% if teacher.profile_pic.name != "teacher_profiles/default_tea.png" %}
+						<button type="submit" class="btn btn-primary btn-sm mt-2">Update Profile Picture</button>
+					{% else %}
+						<button type="submit" class="btn btn-success btn-sm mt-2">Upload Profile Picture</button>
+					{% endif %}
+				{% endif %}
+			</form>
+			
+			<p class="container ml-2">Teacher Name : <b>{{request.session.Teacher_name}}</b></p>
+		
+		</div>
+	</div>
+	<div class="col-md-6 ml-5 mr-5 pt-3">
+		<div class="card card-body">
+			<table class="table container">
+
+			  <tbody>
+				<tr>
+				  <td>Teacher Name :</td>
+				  <td>{{request.session.Teacher_name}}</td>
+				</tr>
+				<tr>
+				  <td>Teacher ID :</td>
+				  <td>{{request.session.Teacher_id}}</td>
+				</tr>
+
+				<tr>
+				  <td>Teacher Email :</td>
+				  <td>
+					{% if email_exists %}
+						{{ profile_email }}
+						<a href="/settings" class="btn btn-outline-primary btn-sm ml-2">Update Email</a>
+					{% else %}
+						<span class="badge badge-warning">Not Available</span>
+						<a href="/settings" class="btn btn-outline-success btn-sm ml-2">Add Email</a>
+					{% endif %}
+
+				  </td>
+				</tr>
+
+
+
+
+			  </tbody>
+			</table>
+		</div>
+</br></br>
+
+
+
+
+	</div>
+</div>
+
+
+{% elif request.session.Stu_id %}
+<style>
+    .profile-pic {
+        width: 400px;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 100%; /* Make it a perfect circle */
+        border: 3px solid #007bff; /* Optional: Add blue border */
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.3); /* Optional: add nice shadow */
+        margin: 0 auto;
+        display: block;
+    }
+</style>
+
+
+<br>
+
+
+
+<div class="row ml-5 pt-5 pl-5">
+	<div class="col-md-3">
+		<div class="card card-body">
+			<a class="btn btn-warning" href="{% url 'index' %}"> &#8592; Back to Home</a>
+			<hr>
+			<h3 style="text-align: center">Profile Settings</h3>
+			<hr>
+
+
+
+            <img src="/media/uploads/student_user.png" class="profile-pic" alt="user">
+			<p class="container ml-2">Student Name : <b>{{request.session.Stu_name}}</b></p>
+
+		</div>
+	</div>
+	<div class="col-md-6 ml-5 mr-5 pt-3">
+		<div class="card card-body">
+			<table class="table container">
+
+			  <tbody>
+				<tr>
+				  <td>Student Name :</td>
+				  <td>{{request.session.Stu_name}}</td>
+				</tr>
+				<tr>
+				  <td>Student ID :</td>
+				  <td>{{request.session.Stu_id}}</td>
+				</tr>
+
+				<tr>
+				  <td>Student Email :</td>
+				  <td>
+
+					{% if email_exists %}
+						{{ profile_email }}
+						<a href="/settings" class="btn btn-outline-primary btn-sm ml-2">Update Email</a>
+					{% else %}
+						<span class="badge badge-warning">Not Available</span>
+						<a href="/settings" class="btn btn-outline-success btn-sm ml-2">Add Email</a>
+					{% endif %}
+
+				  </td>
+				</tr>
+
+			  </tbody>
+			</table>
+		</div>
+</br></br>
+
+
+
+
+	</div>
+</div>
+
+
+
+{% else %}
+
+<div class="jumbotron container pt-5 mt-5">
+    <h1 class="display-4"><b>You Have To <a href="/login">Login</a> First !!!</b></h1>
+  <p class="lead">You can not go this page. If you want to go your profile page, You have to <a href="/login">Login</a> first.</br>THANK YOU</p>
+  <hr class="my-4">
+
+  <a class="btn btn-success btn-lg" href="/login" role="button">Login</a>
+
+</div>
+
+
+{% endif %}
+
+{% endblock %}

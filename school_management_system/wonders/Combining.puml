@@ -1,0 +1,59 @@
+@startuml
+state Student {
+    state "Unenrolled" as Unenrolled
+    state "Enrolled" as Enrolled
+    state "Graduated" as Graduated
+    state "Withdrawn" as Withdrawn
+
+    [*] --> Unenrolled
+    Unenrolled --> Enrolled : enroll
+    Enrolled --> Graduated : graduate
+    Enrolled --> Withdrawn : withdraw
+    Withdrawn --> Enrolled : re-enroll
+    Graduated --> [*]
+    Withdrawn --> [*]
+}
+
+state Teacher {
+    state "Not Hired" as NotHired
+    state "Hired" as Hired
+    state "On Leave" as OnLeave
+    state "Resigned" as Resigned
+
+    [*] --> NotHired
+    NotHired --> Hired : hire
+    Hired --> OnLeave : take leave
+    OnLeave --> Hired : return
+    Hired --> Resigned : resign
+    Resigned --> [*]
+    OnLeave --> Resigned : resign
+}
+
+state Employee {
+    state "Not Employed" as NotEmployed
+    state "Employed" as Employed
+    state "On Leave" as OnLeave
+    state "Terminated" as Terminated
+
+    [*] --> NotEmployed
+    NotEmployed --> Employed : employ
+    Employed --> OnLeave : take leave
+    OnLeave --> Employed : return
+    Employed --> Terminated : terminate
+    Terminated --> [*]
+    OnLeave --> Terminated : terminate
+}
+
+state Department {
+    state "Inactive" as Inactive
+    state "Active" as Active
+    state "Closed" as Closed
+
+    [*] --> Inactive
+    Inactive --> Active : activate
+    Active --> Inactive : deactivate
+    Active --> Closed : close
+    Closed --> [*]
+}
+
+@enduml

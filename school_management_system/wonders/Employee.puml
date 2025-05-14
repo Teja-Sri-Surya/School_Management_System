@@ -1,0 +1,15 @@
+@startuml
+state "Not Employed" as NotEmployed
+state "Employed" as Employed
+state "On Leave" as OnLeave
+state "Terminated" as Terminated
+
+[*] --> NotEmployed
+NotEmployed --> Employed : employ
+Employed --> OnLeave : take leave
+OnLeave --> Employed : return
+Employed --> Terminated : terminate
+Terminated --> [*]
+OnLeave --> Terminated : terminate
+
+@enduml

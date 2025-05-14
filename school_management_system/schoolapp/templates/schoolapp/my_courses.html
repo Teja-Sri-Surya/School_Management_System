@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>My Enrolled Courses</h2>
+{% for enrollment in enrollments %}
+  <div class="card p-3 my-3">
+    <h4>{{ enrollment.course.name }}</h4>
+    <p><strong>Instructor:</strong> {{ enrollment.course.instructor }}</p>
+    <p><strong>Schedule:</strong> {{ enrollment.course.schedule }}</p>
+    <p><strong>Location:</strong> {{ enrollment.course.location }}</p>
+    <p><strong>Enrolled On:</strong> {{ enrollment.date_enrolled }}</p>
+  </div>
+{% empty %}
+  <p>You are not enrolled in any courses.</p>
+{% endfor %}
+{% endblock %}

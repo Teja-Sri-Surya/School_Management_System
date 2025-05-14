@@ -1,0 +1,12 @@
+@startuml
+state "Inactive" as Inactive
+state "Active" as Active
+state "Closed" as Closed
+
+[*] --> Inactive
+Inactive --> Active : activate
+Active --> Inactive : deactivate
+Active --> Closed : close
+Closed --> [*]
+
+@enduml

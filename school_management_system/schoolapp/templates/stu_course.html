@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% block title %}My Classroom{% endblock %}
+{% block body %}
+
+{% load humanize %}
+{% load get_dict %}
+
+<div class="container py-5">
+  <h2 class="text-center mb-4">My Courses</h2>
+
+  {% if course_data_list %}
+    {% for course_data in course_data_list %}
+      <div class="card shadow-sm mb-5">
+        <div class="card-body">
+          <h3 class="card-title">{{ course_data.course_name }}</h3>
+
+          <!-- Tabs Navigation -->
+          <ul class="nav nav-tabs mt-4" id="courseTab{{ forloop.counter }}" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="details-tab-{{ forloop.counter }}" data-toggle="tab" href="#details-{{ forloop.counter }}" role="tab">Course Details</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="assignments-tab-{{ forloop.counter }}" data-toggle="tab" href="#assignments-{{ forloop.counter }}" role="tab">Assignments</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="grades-tab-{{ forloop.counter }}" data-toggle="tab" href="#grades-{{ forloop.counter }}" role="tab">Grades</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="notifications-tab-{{ forloop.counter }}" data-toggle="tab" href="#notifications-{{ forloop.counter }}" role="tab">Notifications</a>
+            </li>
+          </ul>
+
+          <!-- Tabs Content -->
+          <div class="tab-content pt-3" id="courseTabContent{{ forloop.counter }}">
+
+            <!-- Course Details Tab -->
+            <div class="tab-pane fade show active" id="details-{{ forloop.counter }}" role="tabpanel">
+              <p><strong>Instructor:</strong> {{ course_data.teacher_name }}</p>
+              {% for enrollment in enrolled_courses %}
+                {% if enrollment.course.course == course_data.course_name %}
+                  <p><strong>Location:</strong> {% if enrollment.course.location %}{{ enrollment.course.location }}{% else %}Not Available{% endif %}</p>
+                  <p><strong>Class Schedule:</strong> {% if enrollment.course.class_schedule %}{{ enrollment.course.class_schedule }}{% else %}Not Available{% endif %}</p>
+                {% endif %}
+              {% endfor %}
+
+            </div>
+
+            <!-- Assignments Tab -->
+            <div class="tab-pane fade" id="assignments-{{ forloop.counter }}" role="tabpanel">
+              {% if course_data.assignments %}
+                {% for a in course_data.assignments %}
+                  <div class="border p-3 mb-3">
+                    <h5><strong>{{ a.Assignment_name }}</strong></h5>
+                    <p><strong>Due:</strong> {{ a.due_date }}</p>
+                    <p><strong>Title:</strong> {{ a.title }}</p>
+                    <p><strong>Details:</strong> {{ a.Details }}</p>
+                    <a href="{{ a.attachment }}" class="btn btn-info btn-sm" target="_blank">Download Assignment</a>
+
+                    {% with matched_submission=course_data.submitted_assignments_dict|get_item:a.Assignment_name %}
+                      {% if matched_submission %}
+                        <!-- Already Submitted -->
+                        <div class="mt-3">
+                          <span class="badge badge-success"> Submitted </span><br>
+                          <a href="{{ matched_submission.attachment }}" class="btn btn-outline-success btn-sm mt-2" target="_blank">View My Submission</a><br>
+                          <small class="text-muted">Submitted on: {{ matched_submission.Submitted_at|date:"M d, Y H:i" }}</small>
+                        </div>
+                      {% else %}
+                        <!-- Not Yet Submitted -->
+                        <div class="mt-3">
+                          <span class="badge badge-danger"> Pending </span>
+
+                          <form action="/submit_assignment_student" method="POST" enctype="multipart/form-data" class="mt-3">
+                            {% csrf_token %}
+                            <input type="hidden" name="ass_name_stu_submit1" value="{{ a.Assignment_name }}">
+                            <input type="hidden" name="cor_name_stu_submit1" value="{{ a.course }}">
+                            <input type="hidden" name="stu_id_stu_submit1" value="{{ stu_course_id }}">
+
+                            <div class="form-group">
+                              <label>Upload your assignment:</label>
+                              <input type="file" name="attachment_ass_sub" class="form-control-file" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-success btn-sm">Submit Assignment</button>
+                          </form>
+                        </div>
+                      {% endif %}
+                    {% endwith %}
+
+                  </div>
+                {% endfor %}
+              {% else %}
+                <p class="text-muted">No assignments yet.</p>
+              {% endif %}
+            </div>
+
+            <!-- Grades Tab -->
+            <div class="tab-pane fade" id="grades-{{ forloop.counter }}" role="tabpanel">
+              {% if course_data.grades %}
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Assignment</th>
+                      <th>Grade</th>
+                      <th>Out Of</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for g in course_data.grades %}
+                      <tr>
+                        <td>{{ g.Assignment_name }}</td>
+                        <td>{{ g.Grade }}</td>
+                        <td>{{ g.Out_Of_Grade }}</td>
+                        <td><span class="badge badge-success">Graded</span></td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              {% else %}
+                <p class="text-muted">Grades not posted yet.</p>
+              {% endif %}
+            </div>
+
+            <!-- Notifications Tab -->
+            <div class="tab-pane fade" id="notifications-{{ forloop.counter }}" role="tabpanel">
+              {% if course_data.assignment_for_comments %}
+                {% for comment in course_data.comments %}
+                  <div class="border p-2 mb-2">
+                    <strong>{{ comment.user }}</strong>: {{ comment.comment }}
+                    <br><small class="text-muted">{{ comment.time_comment|naturaltime }}</small>
+                  </div>
+                {% endfor %}
+              {% else %}
+                <p class="text-muted">No notifications yet.</p>
+              {% endif %}
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-muted text-center">You are not enrolled in any courses yet.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

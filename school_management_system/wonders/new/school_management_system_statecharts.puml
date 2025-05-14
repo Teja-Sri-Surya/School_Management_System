@@ -1,0 +1,161 @@
+@startuml
+
+title Teacher_login_informa Model Statechart
+state "Not Registered" as NotRegistered_TeacherLogin
+state "Registered" as Registered_TeacherLogin
+state "Active" as Active_TeacherLogin
+state "Inactive" as Inactive_TeacherLogin
+
+[*] --> NotRegistered_TeacherLogin
+NotRegistered_TeacherLogin --> Registered_TeacherLogin : register
+Registered_TeacherLogin --> Active_TeacherLogin : activate
+Active_TeacherLogin --> Inactive_TeacherLogin : deactivate
+Inactive_TeacherLogin --> Active_TeacherLogin : reactivate
+Active_TeacherLogin --> [*]
+Inactive_TeacherLogin --> [*]
+
+@enduml
+
+@startuml
+
+title store_email_teach_new Model Statechart
+state "Not Email Registered" as NotEmailRegistered_StoreEmailTeach
+state "Email Registered" as EmailRegistered_StoreEmailTeach
+
+[*] --> NotEmailRegistered_StoreEmailTeach
+NotEmailRegistered_StoreEmailTeach --> EmailRegistered_StoreEmailTeach : register email
+EmailRegistered_StoreEmailTeach --> [*]
+
+@enduml
+
+@startuml
+
+title Student_courses_with_Teacher_name Model Statechart
+state "Course Not Assigned" as CourseNotAssigned_StudentCourse
+state "Course Assigned" as CourseAssigned_StudentCourse
+
+[*] --> CourseNotAssigned_StudentCourse
+CourseNotAssigned_StudentCourse --> CourseAssigned_StudentCourse : assign course
+CourseAssigned_StudentCourse --> [*]
+
+@enduml
+
+@startuml
+
+title Student_login_informatn Model Statechart
+state "Not Registered" as NotRegistered_StudentLogin
+state "Registered" as Registered_StudentLogin
+state "Active" as Active_StudentLogin
+state "Inactive" as Inactive_StudentLogin
+
+[*] --> NotRegistered_StudentLogin
+NotRegistered_StudentLogin --> Registered_StudentLogin : register
+Registered_StudentLogin --> Active_StudentLogin : activate
+Active_StudentLogin --> Inactive_StudentLogin : deactivate
+Inactive_StudentLogin --> Active_StudentLogin : reactivate
+Active_StudentLogin --> [*]
+Inactive_StudentLogin --> [*]
+
+@enduml
+
+@startuml
+
+title store_email_stu_new Model Statechart
+state "Not Email Registered" as NotEmailRegistered_StoreEmailStu
+state "Email Registered" as EmailRegistered_StoreEmailStu
+
+[*] --> NotEmailRegistered_StoreEmailStu
+NotEmailRegistered_StoreEmailStu --> EmailRegistered_StoreEmailStu : register email
+EmailRegistered_StoreEmailStu --> [*]
+
+@enduml
+
+@startuml
+
+title Teacher_Assignment_upload_File Model Statechart
+state "Assignment Not Uploaded" as AssignmentNotUploaded_TeacherAssignment
+state "Assignment Uploaded" as AssignmentUploaded_TeacherAssignment
+
+[*] --> AssignmentNotUploaded_TeacherAssignment
+AssignmentNotUploaded_TeacherAssignment --> AssignmentUploaded_TeacherAssignment : upload assignment
+AssignmentUploaded_TeacherAssignment --> [*]
+
+@enduml
+
+@startuml
+
+title Student_Submit_Assignment_pro Model Statechart
+state "Assignment Not Submitted" as AssignmentNotSubmitted_StudentSubmitAssignment
+state "Assignment Submitted" as AssignmentSubmitted_StudentSubmitAssignment
+
+[*] --> AssignmentNotSubmitted_StudentSubmitAssignment
+AssignmentNotSubmitted_StudentSubmitAssignment --> AssignmentSubmitted_StudentSubmitAssignment : submit assignment
+AssignmentSubmitted_StudentSubmitAssignment --> [*]
+
+@enduml
+
+@startuml
+
+title Grade_Student Model Statechart
+state "Not Graded" as NotGraded_GradeStudent
+state "Graded" as Graded_GradeStudent
+
+[*] --> NotGraded_GradeStudent
+NotGraded_GradeStudent --> Graded_GradeStudent : grade assignment
+Graded_GradeStudent --> [*]
+
+@enduml
+
+@startuml
+
+title Assignment_Comments Model Statechart
+state "No Comments" as NoComments_AssignmentComments
+state "Comments Added" as CommentsAdded_AssignmentComments
+
+[*] --> NoComments_AssignmentComments
+NoComments_AssignmentComments --> CommentsAdded_AssignmentComments : add comment
+CommentsAdded_AssignmentComments --> [*]
+
+@enduml
+
+@startuml
+
+title Employee Model Statechart
+state "Not Employed" as NotEmployed_Employee
+state "Employed" as Employed_Employee
+state "On Leave" as OnLeave_Employee
+state "Terminated" as Terminated_Employee
+
+[*] --> NotEmployed_Employee
+NotEmployed_Employee --> Employed_Employee : employ
+Employed_Employee --> OnLeave_Employee : take leave
+OnLeave_Employee --> Employed_Employee : return
+Employed_Employee --> Terminated_Employee : terminate
+Terminated_Employee --> [*]
+OnLeave_Employee --> Terminated_Employee : terminate
+
+@enduml
+
+@startuml
+
+title Role Model Statechart
+state "Role Not Assigned" as RoleNotAssigned_Role
+state "Role Assigned" as RoleAssigned_Role
+
+[*] --> RoleNotAssigned_Role
+RoleNotAssigned_Role --> RoleAssigned_Role : assign role
+RoleAssigned_Role --> [*]
+
+@enduml
+
+@startuml
+
+title EmployeeRole Model Statechart
+state "Employee Role Not Assigned" as EmployeeRoleNotAssigned_EmployeeRole
+state "Employee Role Assigned" as EmployeeRoleAssigned_EmployeeRole
+
+[*] --> EmployeeRoleNotAssigned_EmployeeRole
+EmployeeRoleNotAssigned_EmployeeRole --> EmployeeRoleAssigned_EmployeeRole : assign employee role
+EmployeeRoleAssigned_EmployeeRole --> [*]
+
+@enduml

@@ -1,0 +1,108 @@
+@startuml
+
+package "Models" {
+    class Teacher_login_informa {
+        Teacher_ID: CharField
+        Teacher_Name: CharField
+        Teacher_pass: CharField
+        matching_loging_teacher(userID)
+    }
+
+    class store_email_teach_new {
+        Teacher_ID: CharField
+        Teacher_email: CharField
+        matching_show_teacher(userID)
+    }
+
+    class Student_courses_with_Teacher_name {
+        course: CharField
+        Teacher_ID: ForeignKey(Teacher_login_informa)
+    }
+
+    class Student_login_informatn {
+        Student_ID: CharField
+        Student_Name: CharField
+        course: ForeignKey(Student_courses_with_Teacher_name)
+        Student_pass: CharField
+        matching_loging_stu(userID)
+    }
+
+    class store_email_stu_new {
+        Student_ID: CharField
+        Student_email: CharField
+        matching_show_stu(userID)
+    }
+
+    class Teacher_Assignment_upload_File {
+        Assignment_name: CharField
+        course: CharField
+        date: DateField
+        due_date: DateField
+        title: CharField
+        Details: TextField
+        attachment: CharField
+        resource: CharField
+        posts: CharField
+        Out_Of_Grade: CharField
+    }
+
+    class Student_Submit_Assignment_pro {
+        attachment: CharField
+        course: CharField
+        Student_ID: CharField
+        Assignment_name: CharField
+    }
+
+    class Grade_Student {
+        Student_ID: CharField
+        course: CharField
+        Assignment_name: CharField
+        Grade: CharField
+        Out_Of_Grade: CharField
+    }
+
+    class Assignment_Comments {
+        serial_no: AutoField
+        comment: TextField
+        user: CharField
+        post: CharField
+        postID: CharField
+        parent: ForeignKey(Assignment_Comments)
+        time_comment: DateTimeField
+    }
+
+    class Employee {
+        employee_id: CharField
+        first_name: CharField
+        last_name: CharField
+        email: EmailField
+        phone_number: CharField
+        address: TextField
+        hire_date: DateField
+        employee_type: ChoiceField
+        status: ChoiceField
+        roles: ManyToManyField(Role)
+    }
+
+    class Role {
+        name: CharField
+        description: TextField
+    }
+
+    class EmployeeRole {
+        employee: ForeignKey(Employee)
+        role: ForeignKey(Role)
+    }
+
+    Teacher_login_informa -- store_email_teach_new : "1" -- "*" 
+    Teacher_login_informa -- Student_courses_with_Teacher_name : "1" -- "*" 
+    Student_courses_with_Teacher_name -- Student_login_informatn : "1" -- "*"
+    Student_login_informatn -- store_email_stu_new : "1" -- "*"
+    Teacher_login_informa -- Teacher_Assignment_upload_File : "1" -- "*"
+    Student_login_informatn -- Student_Submit_Assignment_pro : "1" -- "*"
+    Teacher_Assignment_upload_File -- Grade_Student : "1" -- "*"
+    Teacher_Assignment_upload_File -- Assignment_Comments : "1" -- "*"
+    Employee -- EmployeeRole : "1" -- "*"
+}
+
+@enduml

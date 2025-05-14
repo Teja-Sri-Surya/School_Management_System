@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load math_filters %}
+{% block body %}
+
+<style>
+/* Card Hover Effect */
+.card:hover {
+  transform: scale(1.03);
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Tooltip Style */
+.tooltip-inner {
+  background-color: #17a2b8;
+  color: white;
+  padding: 5px 10px;
+  font-size: 14px;
+}
+</style>
+
+<div class="container py-5">
+  <h2 class="text-center mb-4">Available Courses</h2>
+
+  {% if courses %}
+    <div class="row">
+      {% for course in courses %}
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm border-primary">
+            <div class="card-body d-flex flex-column">
+
+              <h5 class="card-title">{{ course.course }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Instructor: {{ course.Teacher_ID.Teacher_Name }}</h6>
+
+              <p><strong>Location:</strong> {% if course.location %}{{ course.location }}{% else %}Not Available{% endif %}</p>
+              <p><strong>Class Schedule:</strong> {% if course.class_schedule %}{{ course.class_schedule }}{% else %}Not Available{% endif %}</p>
+
+              {% with filled=30|add:"-course.seats_remaining" %}
+                {% with percent=filled|mul:"100"|div:"30" %}
+                  <div class="mt-3">
+                    <small><strong>Seats:</strong> {{ filled }} 30 
+                      {% if course.seats_remaining == 0 %}
+                        <span class="badge badge-danger ml-2">FULL</span>
+                      {% elif course.seats_remaining <= 2 %}
+                        <span class="badge badge-warning ml-2">Only {{ course.seats_remaining }} Left!</span>
+                      {% else %}
+                        <span class="badge badge-info ml-2">{{ course.seats_remaining }} Left</span>
+                      {% endif %}
+                    </small>
+
+                    <!-- Progress Bar -->
+                    <div class="progress mt-2" style="height: 20px;" data-toggle="tooltip" title="{{ filled }} seats filled out of 30">
+                      <div class="progress-bar 
+                        {% if filled >= 27 %}bg-danger
+                        {% elif filled >= 20 %}bg-warning
+                        {% else %}bg-info{% endif %}" 
+                        role="progressbar"
+                        style="width: {{ percent }}%;" 
+                        aria-valuenow="{{ filled }}" aria-valuemin="0" aria-valuemax="30">
+                        {{ filled }}/30 Seats
+                      </div>
+                    </div>
+                  </div>
+                {% endwith %}
+              {% endwith %}
+
+              <div class="mt-auto">
+                {% if course.id in enrolled_course_ids %}
+                  <a href="{% url 'unenroll_course' course.id %}" class="btn btn-outline-danger btn-block mt-4">
+                    Unenroll
+                  </a>
+                {% else %}
+                  {% if course.seats_remaining == 0 %}
+                    <button class="btn btn-danger btn-block mt-4" disabled>Course Full</button>
+                  {% else %}
+                    <a href="{% url 'enroll_course' course.id %}" class="btn btn-outline-primary btn-block mt-4">
+                      Enroll Now
+                    </a>
+                  {% endif %}
+                {% endif %}
+              </div>
+
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center">
+      <p class="text-muted">No available courses at the moment.</p>
+    </div>
+  {% endif %}
+</div>
+
+<!-- Bootstrap Tooltip Activation -->
+<script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+{% endblock %}

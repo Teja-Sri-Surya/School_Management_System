@@ -1,0 +1,15 @@
+@startuml
+state "Unenrolled" as Unenrolled
+state "Enrolled" as Enrolled
+state "Graduated" as Graduated
+state "Withdrawn" as Withdrawn
+
+[*] --> Unenrolled
+Unenrolled --> Enrolled : enroll
+Enrolled --> Graduated : graduate
+Enrolled --> Withdrawn : withdraw
+Withdrawn --> Enrolled : re-enroll
+Graduated --> [*]
+Withdrawn --> [*]
+
+@enduml
